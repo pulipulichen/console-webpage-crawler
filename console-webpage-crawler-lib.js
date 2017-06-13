@@ -195,8 +195,25 @@ WEBCRAWLER.save_to_ods = function (_data) {
 WEBCRAWLER.s2ab = function (s) {
     var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
-    for (var i=0; i!==s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    for (var i=0; i!==s.length; ++i) {
+        view[i] = s.charCodeAt(i) & 0xFF;
+    }
     return buf;
+};
+
+/**
+ * 移除重複的空白
+ * @param {String} _string
+ * @returns {String}
+ */
+WEBCRAWLER.remove_duplicate_space = function (_string) {
+    while (_string.indexOf("　") > -1) {
+        _string = _string.split("　").join(" ");
+    }
+    while (_string.indexOf("  ") > -1) {
+        _string = _string.split("  ").join(" ");
+    }
+    return _string.trim();
 };
 
 WEBCRAWLER.ajax_from_url = function (_url, _callback) {
@@ -230,6 +247,15 @@ WEBCRAWLER.get_int_by_selector = function (_doc, _selector) {
     }
     _text = _text.replace(",", "");
     return parseInt(_text, 10);
+};
+
+WEBCRAWLER.parseNumber = function (_text) {
+    if (_text === undefined) {
+        return _text;
+    }
+    _text = _text.replace(",", "");
+    _text = _text.trim();
+    return eval(_text);
 };
 
 WEBCRAWLER.show_progression_lock = false;

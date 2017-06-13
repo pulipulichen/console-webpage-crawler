@@ -7,193 +7,29 @@
 
 crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1";
 main = function (_callback) {
+    /**
+     * 裡面存放JSON
+     * @type Array
+     */
     var _data = [];
     
-    var _link_array = [];
-    
-    // 先抓縣市別吧
-    var _district_element = $('#tbList tr[height="50"]');
-    for (var _i = 0; _i < _district_element.length; _i++) {
-        var _tr = _district_element.eq(_i);
-        //var _d = {};
+    $("#ctl00_cph1_ucMag_Panel3 table tbody tr.detailover").each(function (_i, _tr) {
+        var _td_array = $(_tr).children("td.detailtd");
         
-        //_d["縣市別"] = $(_tr).find("td:first").text().split("(")[0].trim();
-        var _district = $(_tr).find("td:first").text().split("(")[0].trim();
-        
-        var _a_element = $(_tr).find("td:last a");
-        for (var _j = 0; _j < _a_element.length; _j++) {
-            var _a = _a_element.eq(_j);
-            var _school_name = _a.text().trim();
-            var _link = _a.attr("href");
-            
-            var _d = {};
-            _d["a2_縣市別"] = _district;
-            _d["a0_學校名稱"] = _school_name;
-            //http://163.23.175.5/LIB/LibView.aspx?10612
-            _d["a1_網頁連結"] = "http://163.23.175.5/LIB/" + _link;
-            _link_array.push(_link);
-            
-            _d["a2_是高中"] = 0;
-            _d["a2_是高職"] = 0;
-            
-            _data.push(_d);
-            
-            // 測試用
-            if (DEBUG.limit_one === true) {
-                break;
-            }
+        var _result = {
+            "系級": WEBCRAWLER.remove_duplicate_space(_td_array.eq(3).text()),
+            "學號": WEBCRAWLER.remove_duplicate_space(_td_array.eq(4).text()),
+            "姓名": WEBCRAWLER.remove_duplicate_space(_td_array.eq(5).text()),
+            "作業成績": WEBCRAWLER.parseNumber(_td_array.eq(6).text()),
+            "考試成績": WEBCRAWLER.parseNumber(_td_array.eq(7).text()),
+            "總成績": WEBCRAWLER.parseNumber(_td_array.eq(10).text()),
         };
-        
-        // 測試用
-        if (DEBUG.limit_one === true) {
-            break;
-        }
-        
-        //_data.push(_d);
-    };
-    
-    // -----------------------------------------------
-    
-    var _loop = function (_i) {
-        if (_i < _link_array.length) {
-            WEBCRAWLER.show_progression(_i, _link_array.length);
-            var _link = _link_array[_i];
-            _get_data_from_link(_link, function (_result) {
-                for (var _key in _result) {
-                    _data[_i][_key] = _result[_key];
-                }
-                
-                _i++;
-                _loop(_i);
-            });
-        }
-        else {
-            // -------------------------------------------------------
-            //console.log(_data);
-            _callback(_data);
-        }
-    };  // var _loop = function (_i) {
-    _loop(0);
-    
-};
-
-var _get_data_from_link = function (_link, _callback) {
-    WEBCRAWLER.ajax_from_url(_link, function (_doc) {
-        var _result = {};
-        _result["a1_校長"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdPrincipal");
-        _result["a1_填報人"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdName");
-        _result["a1_圖書館主任"] = WEBCRAWLER.get_text_by_selector(_doc, "#txtDirectorName");
-        
-        var _address = WEBCRAWLER.get_text_by_selector(_doc, "#tdAddress");
-        var _zipcode;
-        if (_address !== undefined) {
-            _zipcode = _address.split("]")[0];
-            _zipcode = _zipcode.substring(1, _zipcode.length);
-            
-            _address = _address.split("]")[1].trim();
-        }
-        _result["a2_學校郵遞區號"] = _zipcode;
-        _result["a2_學校地址"] = _address;
-        
-        var _tel = WEBCRAWLER.get_text_by_selector(_doc, "#tdTel");
-        var _tel_zip;
-        if (_tel !== undefined) {
-            _tel_zip = _tel.split(")")[0];
-            _tel_zip = _tel_zip.substring(1, _tel_zip.length);
-            //_tel = _tel.split(")")[1];
-        }
-        _result["a2_學校電話區碼"] = _tel_zip;
-        _result["a1_學校電話"] = _tel;
-        _result["a1_學校傳真"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdFax");
-        _result["a1_學校郵件"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdMail a");
-        _result["a1_學校網址"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdWeb1 a");
-        _result["圖書館網址a1_"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdWeb2 a");
-        
-        // --------------------------------------------------
-        
-        _result["b_核定班級數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdClasses1");
-        _result["b_現有班級數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdClasses2");
-        _result["e_核定減現有班級數"] = _result["b_核定班級數"] - _result["b_現有班級數"];
-        _result["b_現有學生數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdStudents2");
-        _result["e_每班平均學生數"] = _result["b_現有學生數"] / _result["b_現有班級數"];
-        
-        var _student_count = _result["b_現有學生數"];
-        var _staff_count = WEBCRAWLER.get_int_by_selector(_doc, "#Td24");
-        var _menber_count = _student_count + _staff_count;
-        
-        _result["c_現有閱覽座位"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdSeats");
-        _result["c_圖書館員工數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdStaffs");
-        _result["e_平均圖書館員工服務員生數"] = _menber_count / _result["c_圖書館員工數"];
-        _result["c_主任人數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdDirector");
-        _result["c_組長人數"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdSupervisor");
-        _result["c_職員_含工友"] = WEBCRAWLER.get_int_by_selector(_doc, "#tdStaff");
-        
-        _result["c_主任知能資格"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdKnowledge");
-        if (typeof(DIRECTOR_QUALIFICATION[_result["c_主任知能資格"]]) !== "undefined") {
-            _result["c_主任知能資格"] = DIRECTOR_QUALIFICATION[_result["c_主任知能資格"]];
-        }
-        
-        // ---------------------------------------------
-        
-        _result["c_書籍冊數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td1");
-        _result["d_圖書借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td2");
-        _result["e_每人平均圖書借閱冊次"] = _result["d_圖書借閱冊次"] / _menber_count;
-        
-        _result["c_總類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td6");
-        _result["d_總類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td7");
-        _result["e_總類每人平均借閱冊次"] =  _result["d_總類借閱冊次"] / _menber_count;
-        
-        _result["c_哲學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td8");
-        _result["d_哲學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td9");
-        _result["e_哲學類每人平均借閱冊次"] =  _result["d_哲學類借閱冊次"] / _menber_count;
-        
-        _result["c_宗教類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td10");
-        _result["d_宗教類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td11");
-        _result["e_宗教類每人平均借閱冊次"] =  _result["d_宗教類借閱冊次"] / _menber_count;
-        
-        _result["c_自然科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td12");
-        _result["d_自然科學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td13");
-        _result["e_自然科學類每人平均借閱冊次"] =  _result["d_自然科學類借閱冊次"] / _menber_count;
-        
-        _result["c_應用科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td14");
-        _result["d_應用科學類借閱冊次："] = WEBCRAWLER.get_int_by_selector(_doc, "#Td15");
-        _result["e_應用科學類每人平均借閱冊次"] =  _result["d_應用科學類借閱冊次"] / _menber_count;
-        
-        _result["c_社會科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td16");
-        _result["d_社會科學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td17");
-        _result["e_社會科學類每人平均借閱冊次"] =  _result["d_社會科學類借閱冊次"] / _menber_count;
-        
-        _result["c_史地類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td18");
-        _result["d_史地類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td19");
-        _result["e_史地類每人平均借閱冊次"] =  _result["d_史地類借閱冊次"] / _menber_count;
-        
-        _result["c_語文類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td20");
-        _result["d_語文類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td21");
-        _result["e_語文類每人平均借閱冊次"] =  _result["d_語文類借閱冊次"] / _menber_count;
-        
-        _result["c_美術類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td22");
-        _result["d_美術類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td23");
-        _result["e_美術類每人平均借閱冊次"] = _result["d_美術類借閱冊次"] / _menber_count;
-                
-        
-        _result["d_圖書借閱人次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td3");
-        _result["e_平均借閱人數"] = _result["d_圖書借閱人次"] / _menber_count;
-        _result["c_視聽資料總數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td4");
-        _result["c_期刊報紙總類數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td5");
-        _result["b_全校教職員人數"] = _staff_count;
-        _result["d_教職員借閱人次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td25");
-        _result["e_平均教職員借閱人次"] = _result["d_教職員借閱人次"] / _staff_count;
-        _result["d_教職員借閱冊數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td26");
-        _result["e_平均教職員借閱冊數"] = _result["d_教職員借閱冊數"] / _staff_count;
-        
-        _result["e_平均教職員借閱冊數"] = _menber_count;
-                
-        _result["a1_附註說明"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdBody");
-        
-        _callback(_result);
+        _data.push(_result);
     });
+    
+    // 回傳資料
+    _callback(_data);
 };
-
 
 // ------------------------------------------------------------------------------
 // 下面程式碼請不要變更
