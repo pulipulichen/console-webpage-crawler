@@ -1,6 +1,8 @@
 // http://163.23.175.5/LIB/LibList.aspx?year=104&semi=2
 
 // 使用方法說明
+// https://docs.google.com/document/d/19L9VSWMbowvhe2cF8Lg4cNIlDh2aondT0gMLoGnjOF8/pub
+// [JS_URL] = https://pulipulichen.github.io/console-webpage-crawler/database-of-high-school-library/104-2.js
 
 // 分析結果希望儲存成的表格
 // https://docs.google.com/spreadsheets/d/1n1WICaolF3wW_0usKsoyY4C3RqtDt7a1VKVUmzGL_7Q/edit
@@ -28,7 +30,7 @@ DIRECTOR_QUALIFICATION = {
     "國家公務人員高等考試暨普通考試圖書資訊管理類科(含圖書館類科)及格；或相當高等考試暨普通考之特種考試圖書資訊管理類科(含圖書館類科)特考及格，並取得任用資格者。": 6,
 };
 
-crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1";
+crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=104&semi=2";
 main = function (_callback) {
     var _data = [];
     
