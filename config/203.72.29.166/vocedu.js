@@ -14,7 +14,7 @@ scriptTag.id = "webcrawler";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
  */
 
-crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1";
+crawl_target_url = "http://203.72.29.166/search/index.php?no=2";
 main = function (_callback) {
     /**
      * 裡面存放JSON
