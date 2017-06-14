@@ -33,8 +33,7 @@ main = function (_callback) {
     // -------------------------------------------------------
     _callback(_data);
 };
-
- */
+*/
 
 var WEBCRAWLER = {};
 
@@ -282,6 +281,36 @@ WEBCRAWLER.show_progression = function (_current, _total) {
         }, 1000);
     }
 };
+
+/**
+ * loop的寫法
+ * @param {Array} _array
+ * @param {Function} _each = function(_item, _cb) { _cb(); }
+ * @param {Function} _complete
+ * @returns {WEBCRAWLER}
+ */
+WEBCRAWLER.loop = function (_array, _each, _complete) {
+    var _count = _array.length;
+    var _loop = function (_i) {
+        if (_i < _count) {
+            var _item = _array[_i];
+            _each(_i, _item, function () {
+                _i++;
+                _loop(_i);
+            });
+        }
+        else {
+            if (typeof(_complete) === "function") {
+                _complete();
+            }
+        }
+    };
+    _loop(0);
+    
+    return this;
+};
+
+// -------------------------------------
 
 WEBCRAWLER.init = function () {
     

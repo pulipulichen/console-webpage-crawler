@@ -161,42 +161,52 @@ var _get_data_from_link = function (_link, _callback) {
         // ---------------------------------------------
         
         _result["c_書籍冊數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td1");
+        _result["e_每人平均書籍冊數"] = _result["c_書籍冊數"] / _menber_count;
         _result["d_圖書借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td2");
         _result["e_每人平均圖書借閱冊次"] = _result["d_圖書借閱冊次"] / _menber_count;
         
         _result["c_總類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td6");
+        _result["e_每人平均總類冊數"] = _result["c_總類"] / _menber_count;
         _result["d_總類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td7");
         _result["e_總類每人平均借閱冊次"] =  _result["d_總類借閱冊次"] / _menber_count;
         
         _result["c_哲學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td8");
+        _result["e_每人平均哲學類冊數"] = _result["c_哲學類"] / _menber_count;
         _result["d_哲學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td9");
         _result["e_哲學類每人平均借閱冊次"] =  _result["d_哲學類借閱冊次"] / _menber_count;
         
         _result["c_宗教類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td10");
+        _result["e_每人平均宗教類冊數"] = _result["c_宗教類"] / _menber_count;
         _result["d_宗教類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td11");
         _result["e_宗教類每人平均借閱冊次"] =  _result["d_宗教類借閱冊次"] / _menber_count;
         
         _result["c_自然科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td12");
+        _result["e_每人平均自然科學類冊數"] = _result["c_自然科學類"] / _menber_count;
         _result["d_自然科學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td13");
         _result["e_自然科學類每人平均借閱冊次"] =  _result["d_自然科學類借閱冊次"] / _menber_count;
         
         _result["c_應用科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td14");
+        _result["e_每人平均應用科學類冊數"] = _result["c_應用科學類"] / _menber_count;
         _result["d_應用科學類借閱冊次："] = WEBCRAWLER.get_int_by_selector(_doc, "#Td15");
         _result["e_應用科學類每人平均借閱冊次"] =  _result["d_應用科學類借閱冊次"] / _menber_count;
         
         _result["c_社會科學類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td16");
+        _result["e_每人平均社會科學類冊數"] = _result["c_社會科學類"] / _menber_count;
         _result["d_社會科學類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td17");
         _result["e_社會科學類每人平均借閱冊次"] =  _result["d_社會科學類借閱冊次"] / _menber_count;
         
         _result["c_史地類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td18");
+        _result["e_每人平均史地類冊數"] = _result["c_史地類"] / _menber_count;
         _result["d_史地類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td19");
         _result["e_史地類每人平均借閱冊次"] =  _result["d_史地類借閱冊次"] / _menber_count;
         
         _result["c_語文類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td20");
+        _result["e_每人平均語文類冊數"] = _result["c_語文類"] / _menber_count;
         _result["d_語文類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td21");
         _result["e_語文類每人平均借閱冊次"] =  _result["d_語文類借閱冊次"] / _menber_count;
         
         _result["c_美術類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td22");
+        _result["e_每人平均美術類冊數"] = _result["c_美術類"] / _menber_count;
         _result["d_美術類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td23");
         _result["e_美術類每人平均借閱冊次"] = _result["d_美術類借閱冊次"] / _menber_count;
                 
@@ -204,14 +214,16 @@ var _get_data_from_link = function (_link, _callback) {
         _result["d_圖書借閱人次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td3");
         _result["e_平均借閱人數"] = _result["d_圖書借閱人次"] / _menber_count;
         _result["c_視聽資料總數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td4");
+        _result["e_每人平均視聽資料總數"] = _result["c_視聽資料總數"] / _menber_count;
         _result["c_期刊報紙總類數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td5");
+        _result["e_每人平均期刊報紙總類數"] = _result["c_期刊報紙總類數"] / _menber_count;
         _result["b_全校教職員人數"] = _staff_count;
         _result["d_教職員借閱人次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td25");
         _result["e_平均教職員借閱人次"] = _result["d_教職員借閱人次"] / _staff_count;
         _result["d_教職員借閱冊數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td26");
         _result["e_平均教職員借閱冊數"] = _result["d_教職員借閱冊數"] / _staff_count;
         
-        _result["e_平均教職員借閱冊數"] = _menber_count;
+        _result["b_全校教職員生人數"] = _menber_count;
                 
         _result["a1_附註說明"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdBody");
         
