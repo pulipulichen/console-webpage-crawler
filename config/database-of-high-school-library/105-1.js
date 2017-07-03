@@ -188,7 +188,7 @@ var _get_data_from_link = function (_link, _last_data, _callback) {
         _result["a1_學校全名"] = WEBCRAWLER.get_text_by_selector(_doc, "#divTitle > h3").split("：")[0];
         
         
-        //取得學校全名之後，判斷是否是高職
+        //取得學校全名之後，判斷是否是高職1
         _result["a2_是高職"] = "否";
         _result["a1_高職名單"] = "";
         //console.log([_result["a1_學校全名"], VOC_LIST_INDEX[_result["a1_學校全名"]], SCHOOL_ABBR[_link], VOC_LIST_INDEX[SCHOOL_ABBR[_link]]]);
