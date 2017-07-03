@@ -317,6 +317,30 @@ WEBCRAWLER.loop = function (_array, _each, _complete) {
     return this;
 };
 
+WEBCRAWLER.parse_url_parameters = function (_url) {
+    var _p = {};
+    
+    if (_url.indexOf("?") > 0) {
+        var _pstring = _url.substring(_url.lastIndexOf("?")+1, _url.length);
+        if (_pstring.indexOf("#") > -1) {
+            _pstring = _pstring.substr(0, _pstring.indexOf("#"));
+        }
+        var _pary = _pstring.split("&");
+        for (var _i = 0; _i < _pary.length; _i++) {
+            var _pair = _pary[_i];
+            var _key = _pair.substr(0, _pair.indexOf("="));
+            var _value = _pair.substring(_pair.indexOf("=")+1, _pair.length);
+            _value = unescape(_value);
+            if (isNaN(_value) === false) {
+                _value = eval(_value);
+            }
+            _p[_key] = _value;
+        }
+    }
+    
+    return _p;
+};
+
 // -------------------------------------
 
 WEBCRAWLER.init = function (_first) {
