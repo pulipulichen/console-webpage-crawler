@@ -102,6 +102,7 @@ main = function (_callback) {
 var _get_data_from_link = function (_link, _callback) {
     WEBCRAWLER.ajax_from_url(_link, function (_doc) {
         var _result = {};
+        _result["a1_學校全名"] = WEBCRAWLER.get_text_by_selector(_doc, "#divTitle > h3").split("：")[0];
         _result["a1_校長"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdPrincipal");
         _result["a1_填報人"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdName");
         _result["a1_圖書館主任"] = WEBCRAWLER.get_text_by_selector(_doc, "#txtDirectorName");

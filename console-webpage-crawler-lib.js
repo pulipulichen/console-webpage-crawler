@@ -220,8 +220,15 @@ WEBCRAWLER.ajax_from_url = function (_url, _callback) {
         url: _url,
         type: 'GET',
         success: function(res) {
-           var data = $.parseHTML(res);  //<----try with $.parseHTML().
-           _callback($(data));
+            var data = undefined;
+            try {
+                data = $.parseHTML(res);  //<----try with $.parseHTML().
+            }
+            catch (_e) {
+                console.log(_e + '\n' + res);
+            }
+           
+            _callback($(data));
         }
     });
 };
@@ -312,12 +319,12 @@ WEBCRAWLER.loop = function (_array, _each, _complete) {
 
 // -------------------------------------
 
-WEBCRAWLER.init = function () {
+WEBCRAWLER.init = function (_first) {
     
     // ---------------------------------------------
 
     // 先偵測有沒有jQuery
-    if (typeof($) !== "function") {
+    if (typeof($) !== "function" || typeof($.parseHTML) !== "function") {
         (function(document, tag) {
             if (document.getElementById("jquery") === null) {
                 var scriptTag = document.createElement(tag), // create a script tag
@@ -329,7 +336,7 @@ WEBCRAWLER.init = function () {
 
             setTimeout(function () {
                 //$.getScript($("#webcrawler_lib").attr("src"));
-                WEBCRAWLER.init();
+                WEBCRAWLER.init(false);
             }, 1000);
         }(document, 'script'));
     }   // if (typeof($) !== "function") {
