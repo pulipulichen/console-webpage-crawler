@@ -433,6 +433,20 @@ var _load_remote_zip_list = function (_callback) {
     });
 };
 
+/**
+ * 載入高職名單
+ */
+var _load_public_private_list = function (_callback) {
+    $.getScript(_remote_list_url, function () {
+        REMOTE_ZIP_LIST_INDEX = {};
+        for (var _i = 0; _i < REMOTE_ZIP_LIST.length; _i++) {
+            var _z = REMOTE_ZIP_LIST[_i].toString();
+            REMOTE_ZIP_LIST_INDEX[_z] = true;
+        }
+        _callback();
+    });
+};
+
 
 // ------------------------------------------------------------------------------
 // 下面程式碼請不要變更
@@ -448,11 +462,13 @@ firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
 var _lib_url = 'https://pulipulichen.github.io/console-webpage-crawler/console-webpage-crawler-lib.js'; 
 var _voc_list_url = 'https://pulipulichen.github.io/console-webpage-crawler/config/database-of-high-school-library/voc_list_105.js'; 
 var _remote_list_url = 'https://pulipulichen.github.io/console-webpage-crawler/config/database-of-high-school-library/remote_zip_list_105.js'; 
+var _pubpri_list_url = 'https://pulipulichen.github.io/console-webpage-crawler/config/database-of-high-school-library/school_public_private_105.js'; 
 
 if (DEBUG.use_local_file === true) {
     _lib_url = 'http://localhost/console-webpage-crawler/console-webpage-crawler-lib.js'; 
     _voc_list_url = 'http://localhost/console-webpage-crawler/config/database-of-high-school-library/voc_list_105.js'; 
     _remote_list_url = 'http://localhost/console-webpage-crawler/config/database-of-high-school-library/remote_zip_list_105.js'; 
+    _pubpri_list_url = 'http://localhost/console-webpage-crawler/config/database-of-high-school-library/school_public_private_105.js'; 
 }
 
 var scriptTag = document.createElement("script"),
