@@ -49,7 +49,9 @@ main = function (_callback) {
     if (typeof(VOC_LIST) === "undefined") {
         _load_voc_list(function () {
             _load_remote_zip_list(function () {
-                main(_callback);
+                _load_public_private_list(function () {
+                    main(_callback);
+                });
             });
         });
         return;
@@ -259,7 +261,15 @@ var _get_data_from_link = function (_link, _last_data, _callback) {
         _result["a1_學校傳真"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdFax");
         _result["a1_學校郵件"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdMail a");
         _result["a1_學校網址"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdWeb1 a");
-        _result["圖書館網址a1_"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdWeb2 a");
+        _result["a1_圖書館網址"] = WEBCRAWLER.get_text_by_selector(_doc, "#tdWeb2 a");
+        
+        _result["a2_公私立分類"] = "不確定";
+        if (typeof(PUBLIC_LIST_INDEX[_result["a1_學校電話"]]) !== "undefined") {
+            _result["a2_公私立分類"] = "公立";
+        }
+        else if (typeof(PRIVATE_LIST_INDEX[_result["a1_學校電話"]]) !== "undefined") {
+            _result["a2_公私立分類"] = "私立";
+        }
         
         // --------------------------------------------------
         
@@ -437,11 +447,17 @@ var _load_remote_zip_list = function (_callback) {
  * 載入高職名單
  */
 var _load_public_private_list = function (_callback) {
-    $.getScript(_remote_list_url, function () {
-        REMOTE_ZIP_LIST_INDEX = {};
-        for (var _i = 0; _i < REMOTE_ZIP_LIST.length; _i++) {
-            var _z = REMOTE_ZIP_LIST[_i].toString();
-            REMOTE_ZIP_LIST_INDEX[_z] = true;
+    $.getScript(_pubpri_list_url, function () {
+        PUBLIC_LIST_INDEX = {};
+        for (var _i = 0; _i < PUBLIC_LIST.length; _i++) {
+            var _z = PUBLIC_LIST[_i].toString();
+            PUBLIC_LIST_INDEX[_z] = true;
+        }
+        
+        PRIVATE_LIST_INDEX = {};
+        for (var _i = 0; _i < PRIVATE_LIST.length; _i++) {
+            var _z = PRIVATE_LIST[_i].toString();
+            PRIVATE_LIST_INDEX[_z] = true;
         }
         _callback();
     });

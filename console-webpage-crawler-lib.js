@@ -265,6 +265,7 @@ WEBCRAWLER.parseNumber = function (_text) {
 };
 
 WEBCRAWLER.show_progression_lock = false;
+WEBCRAWLER.show_progression_last = undefined;
 
 WEBCRAWLER.show_progression = function (_current, _total) {
     if (typeof(_current) === "number" 
@@ -281,7 +282,10 @@ WEBCRAWLER.show_progression = function (_current, _total) {
         }
         _percent = _percent * 100;
         _percent = Math.ceil(_percent);
-        console.log("LOADING: " + _percent + "%");
+        if (_percent !== WEBCRAWLER.show_progression_last) {
+            console.log("LOADING: " + _percent + "%");
+            WEBCRAWLER.show_progression_last = _percent;
+        }
         
         setTimeout(function () {
             WEBCRAWLER.show_progression_lock = false;
