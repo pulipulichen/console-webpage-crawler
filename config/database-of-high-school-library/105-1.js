@@ -48,7 +48,9 @@ main = function (_callback) {
     // 偵測有沒有載入高職名單，如果沒有的話，那就先載入高職名單再說
     if (typeof(VOC_LIST) === "undefined") {
         _load_voc_list(function () {
-            main(_callback);
+            _load_remote_zip_list(function () {
+                main(_callback);
+            });
         });
         return;
     }
@@ -232,6 +234,17 @@ var _get_data_from_link = function (_link, _last_data, _callback) {
             _address = _address.split("]")[1].trim();
         }
         _result["a2_學校郵遞區號"] = _zipcode;
+        
+        // 判斷郵遞區號是否為偏鄉
+        _result["a2_郵遞區號是偏鄉"] = "否";
+        var _z = _zipcode.toString();
+        if (_z.length > 3) {
+            _z = _z.substr(0,3);
+        }
+        if (typeof(REMOTE_ZIP_LIST_INDEX[_z]) !== "undefined") {
+            _result["a2_郵遞區號是偏鄉"] = "是";
+        }
+        
         _result["a2_學校地址"] = _address;
         
         var _tel = WEBCRAWLER.get_text_by_selector(_doc, "#tdTel");
@@ -406,6 +419,21 @@ var _load_voc_list = function (_callback) {
 };
 
 
+/**
+ * 載入高職名單
+ */
+var _load_remote_zip_list = function (_callback) {
+    $.getScript(_remote_list_url, function () {
+        REMOTE_ZIP_LIST_INDEX = {};
+        for (var _i = 0; _i < REMOTE_ZIP_LIST.length; _i++) {
+            var _z = REMOTE_ZIP_LIST[_i].toString();
+            REMOTE_ZIP_LIST_INDEX[_z] = true;
+        }
+        _callback();
+    });
+};
+
+
 // ------------------------------------------------------------------------------
 // 下面程式碼請不要變更
 
@@ -419,9 +447,12 @@ firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
 
 var _lib_url = 'https://pulipulichen.github.io/console-webpage-crawler/console-webpage-crawler-lib.js'; 
 var _voc_list_url = 'https://pulipulichen.github.io/console-webpage-crawler/config/database-of-high-school-library/voc_list_105.js'; 
+var _remote_list_url = 'https://pulipulichen.github.io/console-webpage-crawler/config/database-of-high-school-library/remote_zip_list_105.js'; 
+
 if (DEBUG.use_local_file === true) {
     _lib_url = 'http://localhost/console-webpage-crawler/console-webpage-crawler-lib.js'; 
     _voc_list_url = 'http://localhost/console-webpage-crawler/config/database-of-high-school-library/voc_list_105.js'; 
+    _remote_list_url = 'http://localhost/console-webpage-crawler/config/database-of-high-school-library/remote_zip_list_105.js'; 
 }
 
 var scriptTag = document.createElement("script"),
