@@ -12,10 +12,16 @@ main = function () {
         for (var _j = 0; _j < _v.length; _j++) {
             var _name = _v[_j];
             for (var _k = 0; _k < SCHOOL_LIST.length; _k++) {
-                if (SCHOOL_LIST[_k] === _name) {
-                    _found = true;
-                    break;
+                var _school = SCHOOL_LIST[_k];
+                for (var _l = 0; _l < _school.length; _l++) {
+                    if (_school[_l] === _name) {
+                        _found = true;
+                        break;
+                    }
                 }
+                if (_found === true) {
+                    break;
+                }  
             }
             if (_found === true) {
                 break;

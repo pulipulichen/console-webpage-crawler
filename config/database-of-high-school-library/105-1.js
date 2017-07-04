@@ -384,7 +384,14 @@ var _load_voc_list = function (_callback) {
     $.getScript(_voc_list_url, function () {
         VOC_LIST_INDEX = {};
         for (var _i = 0; _i < VOC_LIST.length; _i++) {
-            VOC_LIST_INDEX[VOC_LIST[_i]] = true;
+            var _ary = VOC_LIST[_i];
+            if (typeof(_ary) !== "object") {
+                _ary = [_ary];
+            }
+            for (var _j = 0; _j < _ary.length; _j++) {
+                VOC_LIST_INDEX[_ary[_j]] = true;
+            }
+            
         }
         
         NOT_VOC_LIST_INDEX = {};
