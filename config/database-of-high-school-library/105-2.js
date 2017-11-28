@@ -1,5 +1,3 @@
-// http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1
-
 crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=105&semi=2";
 var DEBUG = {
     use_local_file: true,
@@ -372,15 +370,31 @@ var _get_data_from_link = function (_link, _last_data, _callback) {
         
         var _ld = {};
         if (_last_data !== undefined 
-                && typeof(_last_data[_result["a1_學校全名"]]) !== undefined) {
+                && typeof(_last_data[_result["a1_學校全名"]]) !== "undefined") {
             _ld = _last_data[_result["a1_學校全名"]];
             
             var _l_result = {};
             for (var _key in _result) {
+                
+                var _l_key = _key + "_l";
+                if (typeof(_ld[_key]) === "undefined" && typeof(_result[_key]) === "undefined") {
+                    console.log("兩年都缺乏資料：" + _result["a1_學校全名"] + "/" + _key);
+                    _l_result[_l_key] = "缺乏兩年資料";
+                    continue;
+                }
+                if (typeof(_ld[_key]) === "undefined") {
+                    console.log("_ld缺乏資料2：" + _result["a1_學校全名"] + "/" + _key);
+                    _l_result[_l_key] = "缺乏上一年資料";
+                    continue;
+                }
+                if (typeof(_result[_key]) === "undefined") {
+                    console.log("_result缺乏資料：" + _result["a1_學校全名"] + "/" + _key);
+                    _l_result[_l_key] = "缺乏今年資料";
+                    continue;
+                }
                 var _c = _result[_key];
                 var _l = _ld[_key];
                 
-                var _l_key = _key + "_l";
                 var _value = _l;
                 if (isNaN(_c) === true) {
                     // 類別資料
@@ -393,6 +407,9 @@ var _get_data_from_link = function (_link, _last_data, _callback) {
                 }
                 _l_result[_l_key] = _value;
             }
+            
+            // ---------------------------------------------------------------
+            
             //console.log(_ld);
             for (var _l_key in _l_result) {
                 _result[_l_key] = _l_result[_l_key];

@@ -1,5 +1,3 @@
-// http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1
-
 crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=105&semi=1";
 var DEBUG = {
     use_local_file: true,
