@@ -265,6 +265,7 @@ WEBCRAWLER.parseNumber = function (_text) {
 };
 
 WEBCRAWLER.show_progression_lock = false;
+WEBCRAWLER.show_progression_last = undefined;
 
 WEBCRAWLER.show_progression = function (_current, _total) {
     if (typeof(_current) === "number" 
@@ -281,7 +282,10 @@ WEBCRAWLER.show_progression = function (_current, _total) {
         }
         _percent = _percent * 100;
         _percent = Math.ceil(_percent);
-        console.log("LOADING: " + _percent + "%");
+        if (_percent !== WEBCRAWLER.show_progression_last) {
+            console.log("LOADING: " + _percent + "%");
+            WEBCRAWLER.show_progression_last = _percent;
+        }
         
         setTimeout(function () {
             WEBCRAWLER.show_progression_lock = false;
@@ -315,6 +319,30 @@ WEBCRAWLER.loop = function (_array, _each, _complete) {
     _loop(0);
     
     return this;
+};
+
+WEBCRAWLER.parse_url_parameters = function (_url) {
+    var _p = {};
+    
+    if (_url.indexOf("?") > 0) {
+        var _pstring = _url.substring(_url.lastIndexOf("?")+1, _url.length);
+        if (_pstring.indexOf("#") > -1) {
+            _pstring = _pstring.substr(0, _pstring.indexOf("#"));
+        }
+        var _pary = _pstring.split("&");
+        for (var _i = 0; _i < _pary.length; _i++) {
+            var _pair = _pary[_i];
+            var _key = _pair.substr(0, _pair.indexOf("="));
+            var _value = _pair.substring(_pair.indexOf("=")+1, _pair.length);
+            _value = unescape(_value);
+            if (isNaN(_value) === false) {
+                _value = eval(_value);
+            }
+            _p[_key] = _value;
+        }
+    }
+    
+    return _p;
 };
 
 // -------------------------------------
