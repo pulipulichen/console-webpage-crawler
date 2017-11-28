@@ -76,6 +76,9 @@ var _get_last_data = function (_callback) {
         _p["semi"] = 2;
         _p["year"] = _p["year"] - 1;
     }
+    else {
+        _p["semi"] = 1;
+    }
     var _last_url = "http://163.23.175.5/LIB/LibList.aspx?year=" + _p["year"] + "&semi=" + _p["semi"];
     //console.log(_last_url);
     WEBCRAWLER.ajax_from_url(_last_url, function (_doc) {
